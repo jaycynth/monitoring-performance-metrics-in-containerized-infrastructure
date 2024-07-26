@@ -1,0 +1,40 @@
+global:
+  scrape_interval: 15s 
+  evaluation_interval: 15s
+
+# Alerting configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      - 'alertmanager:9093'
+
+# Rule files for recording and alerting
+rule_files:
+  - "alert.rules.yml" 
+
+# List of scrape configurations
+scrape_configs:
+  # Scrape Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+
+  # Scrape metrics from EHR application
+  - job_name: 'ehr-app'
+    static_configs:
+      - targets: ['ehr-app:8081']
+
+  # Scrape metrics from stress testing services
+  # - job_name: 'stress-cpu'
+  #   static_configs:
+  #     - targets: ['stress_cpu']
+
+  # - job_name: 'stress-memory'
+  #   static_configs:
+  #     - targets: ['stress_memory']
+
+  # - job_name: 'stress-io'
+  #   static_configs:
+  #     - targets: ['stress_io']

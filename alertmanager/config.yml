@@ -1,0 +1,18 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 12h
+  receiver: 'email-notifications'
+
+receivers:
+  - name: 'email-notifications'
+    email_configs:
+      - to: '${ALERT_EMAIL_TO}'
+        from: '${ALERT_EMAIL_FROM}'
+        smarthost: '${ALERT_SMARTHOST}:${ALERT_SMARTPORT}'
+        auth_username: '${ALERT_SMTP_USERNAME}'
+        auth_password: '${ALERT_SMTP_PASSWORD}'
