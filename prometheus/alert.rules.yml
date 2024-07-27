@@ -1,65 +1,38 @@
 groups:
-  - name: example-alerts
+  - name: alert_rules
     rules:
-      - alert: InstanceDown
-        expr: up == 0
-        for: 5m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Instance {{ $labels.instance }} down"
-          description: "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes."
-
       - alert: HighCPUUsage
-        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
-        for: 10m
+        expr: cpu_usage{instance="localhost"} > 80
+        for: 1m
         labels:
           severity: warning
         annotations:
-          summary: "High CPU usage on {{ $labels.instance }}"
-          description: "CPU usage is above 80% for more than 10 minutes."
+          summary: "High CPU usage detected"
+          description: "The CPU usage on {{ $labels.instance }} is above 80% for more than 1 minute."
 
       - alert: HighMemoryUsage
-        expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 20
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High memory usage on {{ $labels.instance }}"
-          description: "Memory usage is above 80% for more than 10 minutes."
-
-      - alert: HighDiskUsage
-        expr: (node_filesystem_avail_bytes{fstype!="tmpfs",fstype!="overlay"} / node_filesystem_size_bytes{fstype!="tmpfs",fstype!="overlay"}) < 0.15
-        for: 10m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High disk usage on {{ $labels.instance }}"
-          description: "Disk usage is above 85% for more than 10 minutes."
-
-      - alert: HighNetworkLatency
-        expr: rate(node_network_receive_errs_total[5m]) > 0
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High network latency on {{ $labels.instance }}"
-          description: "Network errors detected on {{ $labels.instance }}."
-
-      - alert: HTTPRequestErrors
-        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "HTTP request errors on {{ $labels.instance }}"
-          description: "5xx HTTP errors detected on {{ $labels.instance }}."
-
-      - alert: ServiceDown
-        expr: up{job="ehr-app"} == 0
-        for: 5m
+        expr: memory_usage{instance="localhost"} > 75
+        for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "EHR service down"
-          description: "The EHR application has been down for more than 5 minutes."
+          summary: "High Memory usage detected"
+          description: "The Memory usage on {{ $labels.instance }} is above 75% for more than 1 minute."
+
+      - alert: HighNetworkLatency
+        expr: network_latency_seconds{instance="localhost"} > 0.3
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Network Latency detected"
+          description: "The network latency on {{ $labels.instance }} is above 300ms for more than 30 seconds."
+
+      - alert: HighHTTP500Errors
+        expr: rate(http_status_count{status="500"}[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High rate of HTTP 500 errors"
+          description: "The rate of HTTP 500 errors on {{ $labels.instance }} is greater than 10 per minute."

@@ -52,7 +52,6 @@ services:
     depends_on:
       - ehr-app
 
-
   stress_io:
     image: polinux/stress
     command: ["stress", "--hdd", "2", "--timeout", "60s"]
