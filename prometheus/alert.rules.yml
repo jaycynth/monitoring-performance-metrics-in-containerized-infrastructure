@@ -2,25 +2,26 @@ groups:
   - name: alert_rules
     rules:
       - alert: HighCPUUsage
-        expr: cpu_usage{instance="localhost"} > 80
+        expr: cpu_usage{instance="ehr-app:8081"} > 30
         for: 1m
         labels:
           severity: warning
         annotations:
           summary: "High CPU usage detected"
-          description: "The CPU usage on {{ $labels.instance }} is above 80% for more than 1 minute."
+          description: "The CPU usage on {{ $labels.instance }} is above 30% for more than 1 minute." 
 
       - alert: HighMemoryUsage
-        expr: memory_usage{instance="localhost"} > 75
+        expr: memory_usage{instance="ehr-app:8081"} > 15
         for: 1m
         labels:
           severity: critical
         annotations:
           summary: "High Memory usage detected"
-          description: "The Memory usage on {{ $labels.instance }} is above 75% for more than 1 minute."
+          description: "The Memory usage on {{ $labels.instance }} is above 15% for more than 1 minute."
+      
 
       - alert: HighNetworkLatency
-        expr: network_latency_seconds{instance="localhost"} > 0.3
+        expr: network_latency_seconds{instance="ehr-app:8081"} > 0.3
         for: 30s
         labels:
           severity: warning
@@ -28,11 +29,26 @@ groups:
           summary: "High Network Latency detected"
           description: "The network latency on {{ $labels.instance }} is above 300ms for more than 30 seconds."
 
+
       - alert: HighHTTP500Errors
-        expr: rate(http_status_count{status="500"}[5m]) > 10
-        for: 5m
+        expr: rate(http_status_count{status="500"}[1m]) * 60 > 10  
+        for: 1m
         labels:
           severity: warning
         annotations:
           summary: "High rate of HTTP 500 errors"
           description: "The rate of HTTP 500 errors on {{ $labels.instance }} is greater than 10 per minute."
+
+      - alert: ServiceDown
+        expr: up{job="ehr-app"} == 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "EHR service down"
+          description: "The EHR application has been down for more than 5 minutes."
+
+
+      
+
+     

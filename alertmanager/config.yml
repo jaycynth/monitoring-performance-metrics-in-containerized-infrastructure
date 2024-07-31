@@ -11,8 +11,12 @@ route:
 receivers:
   - name: 'email-notifications'
     email_configs:
-      - to: '${ALERT_EMAIL_TO}'
-        from: '${ALERT_EMAIL_FROM}'
-        smarthost: '${ALERT_SMARTHOST}:${ALERT_SMARTPORT}'
-        auth_username: '${ALERT_SMTP_USERNAME}'
-        auth_password: '${ALERT_SMTP_PASSWORD}'
+      - to: 'lokoc2623@gmail.com'
+        from: 'juliekivuva@gmail.com'
+        smarthost: 'smtp.gmail.com:587'
+        auth_username: 'juliekivuva@gmail.com'
+        auth_password: 'novf cehg cqcu pepc'
+        require_tls: true
+
+
+

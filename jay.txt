@@ -1,0 +1,30 @@
+job, instance, and exported_instance are labels used to categorize and identify the sources of metrics
+
+
+The job label represents a logical grouping of instances that perform the same function or serve the same purpose. It can be thought of as a name for a collection of services or tasks.
+For example, you might have a job label called web_server for all web server instances, database for database servers, or ehr-app for all instances of an electronic health record application.
+
+
+The instance label typically represents an individual instance of a service within a job. It usually contains information about the instance's network location, such as hostname:port or IP:port.
+Use Case: For example, an instance might be labeled as webserver-01:9090 or db1.example.com:5432. This label is unique per instance and helps to identify and monitor each instance's metrics.
+
+The exported_instance label is  used to disambiguate between the source of the data and the instance where the data was collected or exported. 
+Use Case: Suppose metrics are collected from multiple instances but exported via a single Prometheus exporter instance. The instance label might reflect the exporter’s location, while the exported_instance label would indicate the original source instance.
+
+
+Explanation for alert rules:
+
+  - alert: HighHTTP500Errors
+        expr: rate(http_status_count{status="500"}[1m]) * 60 > 10
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High rate of HTTP 500 errors"
+          description: "The rate of HTTP 500 errors on {{ $labels.instance }} is greater than 10 per minute."
+
+ => The rate(http_status_count{status="500"}[1m]) > 10 expression calculates the per-minute rate of HTTP 500 errors over the past 1 minute and checks if it exceeds 10. (as Prometheus calculates rates per second by default we multiply by 60 to turn into minutes).
+
+ => The for: 1m field means the alert will only fire if the condition is true for a continuous minute. 
+
+ 

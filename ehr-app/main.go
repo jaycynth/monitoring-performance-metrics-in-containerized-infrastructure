@@ -29,9 +29,10 @@ var (
 	}, []string{"instance"})
 
 	networkLatency = prometheus.NewSummaryVec(prometheus.SummaryOpts{
-		Name: "network_latency_seconds",
-		Help: "Network latency in seconds",
-	}, []string{"instance"})
+		Name:       "network_latency_seconds",
+		Help:       "Network latency in seconds",
+		Objectives: map[float64]float64{0.5: 0.05, 0.9: 0.1, 0.99: 0.2},
+	}, []string{"instance", "method", "status"})
 
 	httpStatusCount = prometheus.NewCounterVec(prometheus.CounterOpts{
 		Name: "http_status_count",
@@ -67,8 +68,8 @@ func main() {
 			}
 
 			// Get network latency measurement
-			latency := measureNetworkLatency("http://localhost:8080/metrics")
-			networkLatency.WithLabelValues("localhost").Observe(latency)
+			latency := measureNetworkLatency("http://localhost:8080/success")
+			networkLatency.WithLabelValues("localhost", "GET", "success").Observe(latency)
 
 			time.Sleep(5 * time.Second)
 		}

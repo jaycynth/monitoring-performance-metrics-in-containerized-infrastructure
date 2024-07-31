@@ -17,8 +17,12 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     depends_on:
       - prometheus
+    env_file:
+      - ./grafana/.env
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -42,18 +46,18 @@ services:
 
   stress_cpu:
     image: polinux/stress
-    command: ["stress", "--cpu", "4", "--timeout", "60s"]
+    command: ["stress", "--cpu", "4", "--timeout", "120s"]
     depends_on:
       - ehr-app
 
   stress_memory:
     image: polinux/stress
-    command: ["stress", "--vm", "2", "--vm-bytes", "256M", "--timeout", "60s"]
+    command: ["stress", "--vm", "2", "--vm-bytes", "256M", "--timeout", "120s"]
     depends_on:
       - ehr-app
 
   stress_io:
     image: polinux/stress
-    command: ["stress", "--hdd", "2", "--timeout", "60s"]
+    command: ["stress", "--hdd", "2", "--timeout", "120s"]
     depends_on:
       - ehr-app
