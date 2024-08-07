@@ -1,0 +1,17 @@
+global:
+  smtp_smarthost: smtp.gmail.com:587
+  smtp_from: <from email>
+  smtp_auth_username: <smtp username>
+  smtp_auth_password: <smtp password>
+
+route:
+  receiver: 'team-5-mails'
+  group_by: ['alertname']
+
+
+receivers:
+- name: 'team-5-mails'
+  email_configs:
+  - to: <to email>
+
+

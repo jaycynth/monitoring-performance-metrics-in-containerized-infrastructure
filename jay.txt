@@ -12,6 +12,9 @@ The exported_instance label is  used to disambiguate between the source of the d
 Use Case: Suppose metrics are collected from multiple instances but exported via a single Prometheus exporter instance. The instance label might reflect the exporter’s location, while the exported_instance label would indicate the original source instance.
 
 
+
+
+
 Explanation for alert rules:
 
   - alert: HighHTTP500Errors

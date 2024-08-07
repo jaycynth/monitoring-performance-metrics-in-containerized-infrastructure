@@ -15,14 +15,14 @@ services:
     ports:
       - 3000:3000
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
     volumes:
       - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     depends_on:
       - prometheus
     env_file:
-      - ./grafana/.env
+      - ./.env
 
   alertmanager:
     image: prom/alertmanager:latest
@@ -33,7 +33,7 @@ services:
     ports:
       - 9093:9093
     env_file:
-      - ./alertmanager/.env
+      - ./.env
 
   ehr-app:
     build: ./ehr-app
@@ -46,18 +46,22 @@ services:
 
   stress_cpu:
     image: polinux/stress
-    command: ["stress", "--cpu", "4", "--timeout", "120s"]
+    # command: ["stress", "--cpu", "4", "--timeout", "120s"]
+    command: ["sh", "-c", "while true; do stress --cpu 4 --timeout 60s; sleep 120s; done"]
     depends_on:
       - ehr-app
 
+
   stress_memory:
     image: polinux/stress
-    command: ["stress", "--vm", "2", "--vm-bytes", "256M", "--timeout", "120s"]
+    # command: ["stress", "--vm", "2", "--vm-bytes", "256M", "--timeout", "120s"]
+    command: ["sh", "-c", "while true; do stress --vm 2 --vm-bytes 256M --timeout 60s; sleep 120s; done"]
     depends_on:
       - ehr-app
 
   stress_io:
     image: polinux/stress
-    command: ["stress", "--hdd", "2", "--timeout", "120s"]
+    # command: ["stress", "--hdd", "2", "--timeout", "120s"]
+    command: ["sh", "-c", "while true; do stress --hdd 2 --timeout 60s; sleep 120s; done"]
     depends_on:
       - ehr-app

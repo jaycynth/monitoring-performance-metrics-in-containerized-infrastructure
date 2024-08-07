@@ -32,12 +32,12 @@ groups:
 
       - alert: HighHTTP500Errors
         expr: rate(http_status_count{status="500"}[1m]) * 60 > 10  
-        for: 1m
+        for: 10s
         labels:
           severity: warning
         annotations:
           summary: "High rate of HTTP 500 errors"
-          description: "The rate of HTTP 500 errors on {{ $labels.instance }} is greater than 10 per minute."
+          description: "The rate of HTTP 500 errors on {{ $labels.instance }} is greater than 10 per 10sec."
 
       - alert: ServiceDown
         expr: up{job="ehr-app"} == 0
