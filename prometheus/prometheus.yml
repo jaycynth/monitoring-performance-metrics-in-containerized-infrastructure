@@ -20,6 +20,9 @@ scrape_configs:
     static_configs:
       - targets: ['localhost:9090']
 
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['localhost:8080']
 
   # Scrape metrics from EHR application
   - job_name: 'ehr-app'
