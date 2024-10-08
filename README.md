@@ -58,9 +58,3 @@ To clean up unused Docker resources:
 
 # Alerting
 Configure alerting rules in prometheus/alert.rules.yml and set up routing in alertmanager/config.yml. Alerts can be sent via email or other notification systems supported by Alertmanager.
-
-# Contributing
-Feel free to submit issues, fork the repository, and send pull requests to contribute to this project.
-
-# License
-This project is licensed under the MIT License - see the LICENSE file for details.
